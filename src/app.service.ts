@@ -17,8 +17,20 @@ export class AppService {
 
   async create(participantData) {
     // participant.create();
-    const participant = this.participantModel.create(participantData);
+    const participant = await this.participantModel.create(participantData);
     return participant;
+  }
+
+  async getResult() {
+    const getKoreaCount = this.participantModel
+      .find({ sharedBy: 'KOREA' })
+      .count();
+    const getYonseiCount = this.participantModel
+      .find({ sharedBy: 'YONSEI' })
+      .count();
+    return await Promise.all([getKoreaCount, getYonseiCount]).then(
+      ([korea, yonsei]) => ({ korea, yonsei }),
+    );
   }
 
   async countUniversity() {
